@@ -414,9 +414,10 @@
             double longitude = [[msgDic valueForKey:@"longitude"] doubleValue];
             NSString *imageUri = [msgDic valueForKey:@"mImgUri"];
             UIImage *image = [UIImage imageWithContentsOfFile:imageUri];
+            UIImage *newImage = [self tailoringImage:image Area:CGRectMake(([[UIScreen mainScreen] bounds].size.width/2-122)*[UIScreen mainScreen].scale,([[UIScreen mainScreen] bounds].size.height/2-40-70)*[UIScreen mainScreen].scale,244*[UIScreen mainScreen].scale,140*[UIScreen mainScreen].scale)];
             CLLocationCoordinate2D location = CLLocationCoordinate2DMake(latitude, longitude);
             NSString *poi = [msgDic valueForKey:@"poi"];
-            RCLocationMessage *locationMessage = [RCLocationMessage messageWithLocationImage:image location:location locationName:poi];
+            RCLocationMessage *locationMessage = [RCLocationMessage messageWithLocationImage:newImage location:location locationName:poi];
             locationMessage.senderUserInfo = sendUserInfo;
             locationMessage.mentionedInfo = mentionedInfo;
             content = locationMessage;
@@ -496,6 +497,17 @@
             [ws.channel invokeMethod:RCMethodCallBackKeySendMessage arguments:dic];
         }
     }
+}
+
+/**
+ 裁剪图片方法
+ */
+-(UIImage*)tailoringImage:(UIImage*)img Area:(CGRect)area{
+    CGImageRef sourceImageRef = [img CGImage];//将UIImage转换成CGImageRef
+    CGRect rect = CGRectMake(area.origin.x, area.origin.y, area.size.width, area.size.height);
+    CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, rect);//按照给定的矩形区域进行剪裁
+    UIImage *newImage = [UIImage imageWithCGImage:newImageRef];
+    return newImage;
 }
 
 - (void)sendIntactMessage:(id)arg result:(FlutterResult)result {
@@ -676,6 +688,7 @@
         }
         content = [RCImageMessage messageWithImageURI:localPath];
         RCImageMessage *imgMsg = (RCImageMessage *)content;
+        imgMsg.full = YES;
         imgMsg.extra = extra;
     } else if ([objName isEqualToString:@"RC:HQVCMsg"]) {
         long duration = [[msgDic valueForKey:@"duration"] longValue];
