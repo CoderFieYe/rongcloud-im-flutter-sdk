@@ -74,7 +74,7 @@ public class RCIMFlutterWrapper {
     private HashMap<String, Constructor<? extends MessageContent>> messageContentConstructorMap;
 
     private String appkey = null;
-
+    sendMediaMessage
     private RCIMFlutterWrapper() {
         messageContentConstructorMap = new HashMap<>();
         mMainHandler = new Handler(Looper.getMainLooper());
@@ -839,6 +839,7 @@ public class RCIMFlutterWrapper {
                         String imageUri = (String) jsonObject.get("imageUri");
                         if (!TextUtils.isEmpty(imageUri)) {
                             ((ImageMessage) content).setRemoteUri(Uri.parse(imageUri));
+                            ((ImageMessage) content).setIsFull(true);
                         }
                     }
                     if (jsonObject.has("extra")) {
