@@ -74,7 +74,6 @@ public class RCIMFlutterWrapper {
     private HashMap<String, Constructor<? extends MessageContent>> messageContentConstructorMap;
 
     private String appkey = null;
-    sendMediaMessage
     private RCIMFlutterWrapper() {
         messageContentConstructorMap = new HashMap<>();
         mMainHandler = new Handler(Looper.getMainLooper());
